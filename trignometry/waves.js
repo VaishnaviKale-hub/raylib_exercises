@@ -4,11 +4,12 @@ function setup() {
   const world = {
     windowWidth: 600,
     windowHeight: 400,
+    fps: 50,
   };
 
   r.SetTraceLogLevel(r.LOG_NONE);
   r.InitWindow(world.windowWidth, world.windowHeight, "waves");
-  r.SetTargetFPS(100);
+  r.SetTargetFPS(fps);
 
   return world;
 }
