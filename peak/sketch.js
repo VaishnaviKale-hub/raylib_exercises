@@ -31,7 +31,16 @@ function setup() {
   };
 }
 
-function getPeakIndicators(peak, world) {
+function getPeakIndicators(world) {
+  const peak = [];
+
+  for (let i = 1; i <= world.data.length; i++) {
+    peak.push(isPeak(world, i));
+  }
+  return peak;
+}
+
+function drawPeakPoints(peak, world) {
   for (let i = 0; i < peak.length; i++) {
     if (peak[i]) {
       const point = calculatePoint(world, i + 1);
@@ -44,8 +53,13 @@ function drawPeakPoint(point, world) {
   r.DrawCircle(point.x, point.y, 4, world.palette.point);
 }
 
-function connectPoints(p1, p2, world) {
-  r.DrawLine(p1.x, p1.y, p2.x, p2.y, world.palette.line);
+function connectPoints(world) {
+  for (let i = 1; i <= world.data.length - 1; i++) {
+    const point1 = calculatePoint(world, i - 1);
+    const point2 = calculatePoint(world, i);
+
+    r.DrawLineV(point1, point2, world.palette.line);
+  }
 }
 
 function isPeak(world, i) {
@@ -69,16 +83,13 @@ function update(world) {}
 function draw(world) {
   r.BeginDrawing();
   r.ClearBackground(world.palette.bg);
-  const peak = [];
 
-  for (let i = 1; i <= world.data.length - 1; i++) {
-    const point1 = calculatePoint(world, i - 1);
-    const point2 = calculatePoint(world, i);
+  connectPoints(world);
 
-    connectPoints(point1, point2, world);
-    peak.push(isPeak(world, i));
-  }
-  getPeakIndicators(peak, world);
+  // Don't calculate peak here
+  // Only call two functions here = connectPoints(), drawPeakPoints();
+  const peak = getPeakIndicators(world);
+  drawPeakPoints(peak, world);
 
   r.EndDrawing();
 }
